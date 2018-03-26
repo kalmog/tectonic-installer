@@ -1,3 +1,11 @@
+module "ca" {
+  source = "./ca/self-signed"
+
+  root_ca_cert_pem = "${module.ca_certs.kube_ca_cert_pem}"
+  root_ca_key_alg  = "${var.tectonic_ca_key_alg}"
+  root_ca_key_pem  = "${var.tectonic_ca_key}"
+}
+
 module "kube_certs" {
   source = "./kube/self-signed"
 
@@ -6,7 +14,7 @@ module "kube_certs" {
 }
 
 module "etcd_certs" {
-  source = "./etcd/signed"
+  source = "./etcd/self-signed"
 
   etcd_cert_dns_names = "${var.etcd_dns_names}"
   service_cidr        = "${var.service_cidr}"

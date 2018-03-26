@@ -8,7 +8,8 @@ resource "tls_cert_request" "ingress" {
   private_key_pem = "${tls_private_key.ingress.private_key_pem}"
 
   subject {
-    common_name = "${element(split(":", var.base_address), 0)}"
+    common_name  = "${element(split(":", var.base_address), 0)}"
+    organization = "ingress"
   }
 
   # subject commonName is deprecated per RFC2818 in favor of
@@ -21,11 +22,10 @@ resource "tls_cert_request" "ingress" {
 resource "tls_locally_signed_cert" "ingress" {
   cert_request_pem = "${tls_cert_request.ingress.cert_request_pem}"
 
-  ca_key_algorithm   = "${var.ca_key_alg}"
-  ca_private_key_pem = "${var.ca_key_pem}"
-  ca_cert_pem        = "${var.ca_cert_pem}"
-
-  validity_period_hours = 26280
+  ca_key_algorithm      = "${var.ca_key_alg}"
+  ca_private_key_pem    = "${var.ca_key_pem}"
+  ca_cert_pem           = "${var.ca_cert_pem}"
+  validity_period_hours = "26280"
 
   allowed_uses = [
     "key_encipherment",
